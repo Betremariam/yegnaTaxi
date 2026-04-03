@@ -1,0 +1,128 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PASSENGER
+  DRIVER
+  SUB_ADMIN
+  SUPER_ADMIN
+}
+
+enum TransactionType {
+  TOP_UP
+  FARE_PAYMENT
+  REFUND
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+}
+
+model User {
+  id                         String               @id @default(uuid())
+  name                       String
+  phone                      String               @unique
+  nationalId                 String?              @unique // For both passengers and drivers
+  password                   String
+  role                       UserRole
+  userId                     String               @unique // Display ID (e.g., P-123, D-456)
+  isFirstLogin               Boolean              @default(true)
+  isVerified                 Boolean              @default(true) // Default to true since admins register them
+  photoUrl                   String? // URL for passenger profile photo
+  createdAt                  DateTime             @default(now())
+  updatedAt                  DateTime             @updatedAt
+
+  // Relations
+  balance             Balance?
+  transactions        Transaction[]
+  driverEarnings      DriverEarnings?
+  createdBy           String? // For tracking who created this user (Sub Admin)
+  relatedTransactions Transaction[]    @relation("RelatedTransactions")
+  
+  // Vehicle details for Drivers
+  licensePlate        String?
+  carModel            String?
+  
+  // Fermata relation (for route/tariff management)
+  fermatas            Fermata[]        @relation("UserFermatas")
+
+  @@index([role])
+  @@index([phone])
+  @@index([nationalId])
+}
+
+model Balance {
+  id                String   @id @default(uuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  currentBalance    Decimal  @default(0) @db.Decimal(10, 2)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Transaction {
+  id            String          @id @default(uuid())
+  userId        String
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          TransactionType
+  amount        Decimal         @db.Decimal(10, 2)
+  description   String?
+  relatedUserId String? // For fare payments (driver)
+  relatedUser   User?           @relation("RelatedTransactions", fields: [relatedUserId], references: [id])
+  createdAt     DateTime        @default(now())
+
+  @@index([userId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model DriverEarnings {
+  id            String        @id @default(uuid())
+  driverId      String        @unique
+  driver        User          @relation(fields: [driverId], references: [id], onDelete: Cascade)
+  totalEarnings Decimal       @default(0) @db.Decimal(10, 2)
+  bankAccount   String?
+  bankName      String?
+  accountName   String?
+  paymentStatus PaymentStatus @default(PENDING)
+  lastPaidAt    DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model PaymentRecord {
+  id            String        @id @default(uuid())
+  userId        String
+  userRole      UserRole
+  amount        Decimal       @db.Decimal(10, 2)
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentDate   DateTime?
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([userRole])
+  @@index([paymentStatus])
+}
+
+model Fermata {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  fare      Decimal  @db.Decimal(10, 2)
+  drivers   User[]   @relation("UserFermatas")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+}
