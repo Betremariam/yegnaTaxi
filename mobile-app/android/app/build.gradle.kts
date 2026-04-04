@@ -25,7 +25,7 @@ android {
         applicationId = "com.example.yegna_taxi"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23  // Increased from 21 to match mobile_scanner requirement
+        minSdk = flutter.minSdkVersion  // Increased from 21 to match mobile_scanner requirement
         targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName

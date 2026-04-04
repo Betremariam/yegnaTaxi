@@ -79,11 +79,14 @@ model Transaction {
   description   String?
   relatedUserId String? // For fare payments (driver)
   relatedUser   User?           @relation("RelatedTransactions", fields: [relatedUserId], references: [id])
+  fermataId     String? // Station where the transaction happened
+  fermata       Fermata?        @relation("FermataTransactions", fields: [fermataId], references: [id])
   createdAt     DateTime        @default(now())
 
   @@index([userId])
   @@index([type])
   @@index([createdAt])
+  @@index([fermataId])
 }
 
 model DriverEarnings {
@@ -117,12 +120,13 @@ model PaymentRecord {
 }
 
 model Fermata {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  fare      Decimal  @db.Decimal(10, 2)
-  drivers   User[]   @relation("UserFermatas")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String          @id @default(uuid())
+  name          String          @unique
+  fare          Decimal         @db.Decimal(10, 2)
+  drivers       User[]          @relation("UserFermatas")
+  transactions  Transaction[]   @relation("FermataTransactions")
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 
   @@index([name])
 }

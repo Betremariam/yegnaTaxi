@@ -58,7 +58,11 @@ class User {
            ? (json['fermatas'] as List).map((i) => Fermata.fromJson(i)).toList() 
            : null,
        fermataId: json['fermataId'],
-       fermata: json['fermata'] != null ? Fermata.fromJson(json['fermata']) : null,
+       fermata: json['fermata'] != null
+           ? Fermata.fromJson(json['fermata'])
+           : (json['fermatas'] != null && (json['fermatas'] as List).isNotEmpty
+               ? Fermata.fromJson(json['fermatas'][0])
+               : null),
      );
    }
  

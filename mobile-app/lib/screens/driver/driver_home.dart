@@ -306,6 +306,7 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(balanceProvider.notifier).fetchBalance();
+      ref.read(authProvider.notifier).fetchProfile();
     });
   }
 

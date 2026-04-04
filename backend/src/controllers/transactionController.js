@@ -200,6 +200,7 @@ const processFarePayment = async (req, res, next) => {
             amount: -amount,
             description: `Fare payment to driver`,
             relatedUserId: driverId,
+            fermataId: activeFermata ? activeFermata.id : null,
           },
           {
             userId: driverId,
@@ -207,6 +208,7 @@ const processFarePayment = async (req, res, next) => {
             amount: amount,
             description: `Fare payment from ${passenger.name}`,
             relatedUserId: passenger.id,
+            fermataId: activeFermata ? activeFermata.id : null,
           },
         ],
       });

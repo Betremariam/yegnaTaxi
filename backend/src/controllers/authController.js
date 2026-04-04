@@ -73,6 +73,7 @@ const login = async (req, res, next) => {
           licensePlate: userWithDetails.licensePlate,
           carModel: userWithDetails.carModel,
           fermatas: userWithDetails.fermatas,
+          fermata: userWithDetails.fermatas?.[0] || null,
         },
       },
     });
@@ -165,6 +166,7 @@ const getProfile = async (req, res, next) => {
       profile.licensePlate = user.licensePlate;
       profile.carModel = user.carModel;
       profile.fermatas = user.fermatas;
+      profile.fermata = user.fermatas?.[0] || null;
     }
 
     res.json({

@@ -44,6 +44,35 @@ const getRecommendations = async (req, res, next) => {
             }
         });
     } catch (error) {
+        console.error("Controller AI Recommendations Error:", error.message);
+        // If it's a rate limit error but we don't have cache, send a 200 with a warning instead of 500
+        if (error.message.includes('429')) {
+            return res.json({
+                success: true,
+                data: {
+                    trafficData: [],
+                    recommendations: "The AI is currently busy. Please try again in a few minutes.",
+                    isRateLimited: true
+                }
+            });
+        }
+        next(error);
+    }
+};
+
+/**
+ * Get AI Predictive Forecast for Admin
+ */
+const getForecast = async (req, res, next) => {
+    try {
+        const { getDemandForecast } = require('../services/aiService');
+        const forecastData = await getDemandForecast(prisma);
+
+        res.json({
+            success: true,
+            data: forecastData
+        });
+    } catch (error) {
         next(error);
     }
 };
@@ -62,19 +91,19 @@ const executeAssignment = async (req, res, next) => {
             });
         }
 
-        // Add the new fermata to the driver's allowed list (if not already there)
+        // REASSIGN the driver to the new station (Clearing previous assignments)
         await prisma.user.update({
             where: { id: driverId },
             data: {
                 fermatas: {
-                    connect: { id: fermataId }
+                    set: [{ id: fermataId }]
                 }
             }
         });
 
         res.json({
             success: true,
-            message: 'Driver successfully assigned to the new station'
+            message: 'Driver successfully reassigned to the new station'
         });
     } catch (error) {
         next(error);
@@ -84,5 +113,6 @@ const executeAssignment = async (req, res, next) => {
 module.exports = {
     chat,
     getRecommendations,
+    getForecast,
     executeAssignment
 };

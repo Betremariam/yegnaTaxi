@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { chat, getRecommendations, executeAssignment } = require('../controllers/aiController');
+const { chat, getRecommendations, getForecast, executeAssignment } = require('../controllers/aiController');
 const { authenticate, authorize } = require('../middleware/auth');
 
 /**
@@ -42,6 +42,7 @@ router.post('/chat', authenticate, chat);
 
 // New Admin-only AI routes
 router.get('/recommendations', authenticate, authorize('SUPER_ADMIN', 'SUB_ADMIN'), getRecommendations);
+router.get('/forecast', authenticate, authorize('SUPER_ADMIN', 'SUB_ADMIN'), getForecast);
 router.post('/execute-assignment', authenticate, authorize('SUPER_ADMIN', 'SUB_ADMIN'), executeAssignment);
 
 module.exports = router;

@@ -112,9 +112,9 @@ class _QRScannerState extends ConsumerState<QRScanner> {
   void _showChargeSheet(User passenger, String qrCode) {
     final driver = ref.read(authProvider).user;
     final List<Fermata> allowedFermatas = driver?.fermatas ?? [];
-    Fermata? selectedFermata = allowedFermatas.isNotEmpty ? allowedFermatas.first : null;
+    Fermata? selectedFermata = driver?.fermata ?? (allowedFermatas.isNotEmpty ? allowedFermatas.first : null);
     
-    final amountController = TextEditingController(text: selectedFermata != null ? selectedFermata.fare.toStringAsFixed(2) : '');
+    final amountController = TextEditingController(text: selectedFermata != null ? selectedFermata.fare.toStringAsFixed(2) : '0.00');
     bool isSubmitting = false;
     String fareType = 'Normal';
 
@@ -164,8 +164,13 @@ class _QRScannerState extends ConsumerState<QRScanner> {
                       Container(
                         padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBase,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [AppColors.primaryBase, AppColors.primaryBase.withOpacity(0.8)],
+                          ),
                           borderRadius: BorderRadius.circular(24),
+                          border: Border.all(color: Colors.white.withOpacity(0.2), width: 2), // Visible border
                           boxShadow: [
                             BoxShadow(
                               color: AppColors.primaryBase.withOpacity(0.3),
@@ -183,10 +188,10 @@ class _QRScannerState extends ConsumerState<QRScanner> {
                             const SizedBox(height: 12),
                             TextField(
                               controller: amountController,
-                              readOnly: true, // Prevent manual typing
+                              readOnly: true, // Manual typing disabled to enforce cap
                               decoration: InputDecoration(
                                 prefixText: 'ETB ',
-                                prefixStyle: const TextStyle(color: Colors.white60, fontSize: 18, fontWeight: FontWeight.bold),
+                                prefixStyle: const TextStyle(color: Colors.white70, fontSize: 18, fontWeight: FontWeight.bold),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                               ),
