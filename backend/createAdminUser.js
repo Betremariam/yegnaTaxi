@@ -9,8 +9,7 @@ async function createAdminUser() {
     // Admin details
     const adminDetails = {
       name: 'Admin User',
-      phone: '0912345678', // Replace with desired phone number
-      phone: '0912345678', // Replace with desired phone number
+      phone: '0912345678', // Replace with desired phone number, // Replace with desired phone number
       password: '12345678', // Replace with desired password
       role: 'SUPER_ADMIN' // Can be 'SUPER_ADMIN' or 'SUB_ADMIN'
     };

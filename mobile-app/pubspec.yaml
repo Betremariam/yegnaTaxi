@@ -1,0 +1,36 @@
+name: yegna_taxi
+description: QR-Based Shared Transport Digital Payment System - Mobile App
+publish_to: "none"
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  app_links: ^6.4.1
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  flutter_riverpod: ^2.4.9
+  http: ^1.1.0
+  shared_preferences: ^2.2.2
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^7.1.4
+  permission_handler: ^11.1.0
+  intl: ^0.19.0
+  url_launcher: ^6.2.2
+  image_picker: ^1.0.4
+  cached_network_image: ^3.3.1
+  google_nav_bar: ^5.0.6
+  google_fonts: ^6.1.0
+  flutter_animate: ^4.5.0
+  shimmer: ^3.0.0
+  fl_chart: ^0.69.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true

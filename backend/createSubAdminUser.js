@@ -9,8 +9,7 @@ async function createSubAdminUser() {
     // Sub Admin details - MODIFY THESE VALUES AS NEEDED
     const subAdminDetails = {
       name: 'Sub Admin User',
-      phone: '0987654321', // Replace with desired phone number
-      phone: '0987654321', // Replace with desired phone number
+      phone: '0987654321', // Replace with desired phone number // Replace with desired phone number
       password: '12345678', // Replace with desired password
       role: 'SUB_ADMIN'
     };
