@@ -55,7 +55,7 @@ summarie of the current system and our proposed system comparison
 ---
 
 The overall work flow of the system visualized
-![Use Case Diagram](usecase_diagram-1.png)
+![Use Case Diagram](useCase-1.png)
 
 ## 🛠️ Technology Stack
 
